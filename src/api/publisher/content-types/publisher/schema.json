@@ -16,7 +16,7 @@
       "type": "string"
     },
     "lastReviewed": {
-      "type": "datetime"
+      "type": "date"
     }
   }
 }

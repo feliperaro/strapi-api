@@ -725,7 +725,7 @@ export interface ApiPublisherPublisher extends Schema.CollectionType {
   };
   attributes: {
     name: Attribute.String;
-    lastReviewed: Attribute.DateTime;
+    lastReviewed: Attribute.Date;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -760,7 +760,7 @@ export interface ApiReviewReview extends Schema.CollectionType {
       Attribute.Required &
       Attribute.Unique &
       Attribute.SetMinMaxLength<{
-        minLength: 5;
+        minLength: 2;
         maxLength: 50;
       }>;
     rating: Attribute.Integer &
