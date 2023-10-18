@@ -14,10 +14,27 @@ module.exports = createCoreController(
   ({ strapi }) => ({
     async find(ctx) {
       try {
+        const contentType = strapi.contentType("api::category.category");
         const { category, offset, limit } = ctx.query;
 
         const limitFilter = limit === undefined ? 4 : parseInt(limit);
         const startFilter = offset === undefined ? 0 : parseInt(offset);
+
+        if (category === undefined) {
+          const categories = await strapi.entityService.findMany(
+            "api::category.category",
+            {
+              sort: "id",
+              start: startFilter,
+              limit: limitFilter,
+            }
+          );
+          const sanitizedEntity = await sanitize.contentAPI.output(
+            categories,
+            contentType
+          );
+          return sanitizedEntity;
+        }
 
         let filters = {
           filters: {
@@ -33,8 +50,8 @@ module.exports = createCoreController(
         );
 
         if (!categoryService) {
-          ctx.response.status = 404;
-          ctx.response.message = "Not found. category: " + category;
+          ctx.body = "Not found. category: " + category;
+          ctx.status = 404;
           return;
         }
 
@@ -52,15 +69,15 @@ module.exports = createCoreController(
           filters
         );
 
-        const contentType = strapi.contentType("api::category.category");
         const sanitizedEntity = await sanitize.contentAPI.output(
           reviews,
           contentType
         );
         return sanitizedEntity;
       } catch (error) {
-        console.log(error);
-        ctx.error = error;
+        console.error(error);
+        ctx.body = error.message;
+        ctx.status = 400;
       }
     },
   })
