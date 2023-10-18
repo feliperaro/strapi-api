@@ -16,8 +16,8 @@ module.exports = createCoreController(
       try {
         const { category, offset, limit } = ctx.query;
 
-        const startFilter = offset === undefined ? 0 : parseInt(offset);
         const limitFilter = limit === undefined ? 4 : parseInt(limit);
+        const startFilter = offset === undefined ? 0 : parseInt(offset);
 
         let filters = {
           filters: {
@@ -39,7 +39,6 @@ module.exports = createCoreController(
         }
 
         filters = {
-          fields: ["title"],
           filters: {
             categories: [categoryService.id],
           },
