@@ -36,17 +36,15 @@ module.exports = createCoreController(
           return sanitizedEntity;
         }
 
-        let filters = {
-          filters: {
-            name: {
-              $eq: category,
-            },
-          },
-        };
-
         const [categoryService] = await strapi.entityService.findMany(
           "api::category.category",
-          filters
+          {
+            filters: {
+              name: {
+                $eq: category,
+              },
+            },
+          }
         );
 
         if (!categoryService) {
@@ -55,18 +53,16 @@ module.exports = createCoreController(
           return;
         }
 
-        filters = {
-          filters: {
-            categories: [categoryService.id],
-          },
-          sort: "id",
-          start: startFilter,
-          limit: limitFilter,
-        };
-
         const reviews = await strapi.entityService.findMany(
           "api::review.review",
-          filters
+          {
+            filters: {
+              categories: [categoryService.id],
+            },
+            sort: "id",
+            start: startFilter,
+            limit: limitFilter,
+          }
         );
 
         const sanitizedEntity = await sanitize.contentAPI.output(
